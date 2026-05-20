@@ -18,3 +18,9 @@ id = "3XlIE5-SbISGHAhtFnM9d"
 uri = "file://public/preview-portfolio.zip"
 type = "unspecified"
 title = "DEV.OS Portfolio Preview — preview.html"
+
+[[outputs]]
+id = "dQQxq9692C9EFePLv0Obw"
+uri = "file://public/devos-portfolio-source.zip"
+type = "unspecified"
+title = "DEV.OS Portfolio — Full Source Code"

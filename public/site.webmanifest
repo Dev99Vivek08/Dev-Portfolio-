@@ -1,0 +1,18 @@
+{
+  "name": "Alex Chen — DEV.OS Portfolio",
+  "short_name": "DEV.OS",
+  "description": "Full Stack Developer Portfolio — Alex Chen",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["portfolio", "developer", "technology"]
+}

@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useAdminData } from "@/lib/use-admin-data";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { scrollToSection } from "@/utils";
 
 const ParticleField = dynamic(() => import("./ParticleField"), {
   ssr: false,
@@ -10,26 +12,35 @@ const ParticleField = dynamic(() => import("./ParticleField"), {
 });
 
 export default function Hero({ onTerminalClick }: { onTerminalClick: () => void }) {
-  const adminData = useAdminData();
+  const adminData   = useAdminData();
   const { hero, contact } = adminData;
-  const roles = hero.roles?.length ? hero.roles : ["Full Stack Developer", "UI/UX Engineer", "3D Creative Dev"];
+  const prefersReduced = useReducedMotion();
+
+  const roles = hero.roles?.length
+    ? hero.roles
+    : ["Full Stack Developer", "UI/UX Engineer", "3D Creative Dev"];
+
   const socialLinks = [
-    { label: "GitHub", href: contact.github || "https://github.com" },
-    { label: "LinkedIn", href: contact.linkedin || "https://linkedin.com" },
-    { label: "Twitter", href: contact.twitter || "https://twitter.com" },
+    { label: "GitHub",   href: contact.github   || "https://github.com" },
+    { label: "LinkedIn", href: contact.linkedin  || "https://linkedin.com" },
+    { label: "Twitter",  href: contact.twitter   || "https://twitter.com" },
   ];
 
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [displayRole, setDisplayRole] = useState("");
-  const [typing, setTyping] = useState(true);
-  const [prefersReduced, setPrefersReduced] = useState(false);
+  const [roleIndex,    setRoleIndex]   = useState(0);
+  const [displayRole,  setDisplayRole] = useState("");
+  const [typing,       setTyping]      = useState(true);
+  const [isTouch,      setIsTouch]     = useState(false);
   const avatarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setPrefersReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    setIsTouch(window.matchMedia("(hover: none)").matches);
   }, []);
 
   useEffect(() => {
+    if (prefersReduced) {
+      setDisplayRole(roles[roleIndex]);
+      return;
+    }
     const role = roles[roleIndex];
     let i = 0;
     setDisplayRole("");
@@ -43,20 +54,16 @@ export default function Hero({ onTerminalClick }: { onTerminalClick: () => void 
         clearInterval(typeInterval);
         setTimeout(() => {
           setTyping(false);
-          setTimeout(() => {
-            setRoleIndex((prev) => (prev + 1) % roles.length);
-          }, 500);
+          setTimeout(() => setRoleIndex((prev) => (prev + 1) % roles.length), 500);
         }, 2000);
       }
-    }, prefersReduced ? 0 : 60);
+    }, 60);
 
     return () => clearInterval(typeInterval);
-  }, [roleIndex, prefersReduced]);
+  }, [roleIndex, prefersReduced, roles]);
 
   useEffect(() => {
-    if (prefersReduced) return;
-    const isTouch = window.matchMedia("(hover: none)").matches;
-    if (isTouch) return;
+    if (prefersReduced || isTouch) return;
 
     const handleMouse = (e: MouseEvent) => {
       if (!avatarRef.current) return;
@@ -70,46 +77,34 @@ export default function Hero({ onTerminalClick }: { onTerminalClick: () => void 
 
     window.addEventListener("mousemove", handleMouse, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouse);
-  }, [prefersReduced]);
-
-  const scrollToSection = (id: string) => {
-    const el = document.querySelector(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+  }, [prefersReduced, isTouch]);
 
   const nameParts = [hero.firstName || "Alex", hero.lastName || "Chen"];
 
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center overflow-hidden"
+      className="relative min-h-[100dvh] flex items-center overflow-hidden"
       aria-label="Hero section"
     >
-      <ParticleField />
+      {!prefersReduced && <ParticleField />}
 
-      {/* Vignette */}
       <div
         className="absolute inset-0 pointer-events-none z-[1]"
-        style={{
-          background: "radial-gradient(ellipse at center, transparent 40%, rgba(5,5,5,0.7) 100%)",
-        }}
+        style={{ background: "radial-gradient(ellipse at center, transparent 40%, rgba(5,5,5,0.7) 100%)" }}
         aria-hidden="true"
       />
-
-      {/* Bottom fade */}
       <div
         className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none z-[1]"
         style={{ background: "linear-gradient(to bottom, transparent, #050505)" }}
         aria-hidden="true"
       />
 
-      {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 w-full pt-24 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center min-h-[80vh]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center min-h-[80dvh]">
 
           {/* Left — Text */}
           <div className="flex flex-col justify-center order-2 lg:order-1">
-            {/* Status badge */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -125,7 +120,6 @@ export default function Hero({ onTerminalClick }: { onTerminalClick: () => void 
               </span>
             </motion.div>
 
-            {/* Name */}
             <motion.h1
               initial={{ opacity: 0, y: 35 }}
               animate={{ opacity: 1, y: 0 }}
@@ -136,16 +130,17 @@ export default function Hero({ onTerminalClick }: { onTerminalClick: () => void 
               {nameParts.map((word, i) => (
                 <span
                   key={i}
-                  className={`block text-5xl sm:text-6xl lg:text-7xl xl:text-[5.5rem] font-black ${
-                    i === 1 ? "text-[#D9FF00]" : "text-white"
-                  }`}
+                  className={`block font-black ${i === 1 ? "text-[#D9FF00]" : "text-white"}`}
+                  style={{
+                    fontSize: "clamp(2.75rem, 8vw, 5.5rem)",
+                    lineHeight: 1,
+                  }}
                 >
                   {word}
                 </span>
               ))}
             </motion.h1>
 
-            {/* Role typewriter */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -159,7 +154,6 @@ export default function Hero({ onTerminalClick }: { onTerminalClick: () => void 
               <span className={`text-[#D9FF00] ${typing ? "blink" : "opacity-0"}`} aria-hidden="true">_</span>
             </motion.div>
 
-            {/* Tagline */}
             <motion.p
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -169,7 +163,6 @@ export default function Hero({ onTerminalClick }: { onTerminalClick: () => void 
               {hero.subtitle}
             </motion.p>
 
-            {/* CTAs */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -192,7 +185,6 @@ export default function Hero({ onTerminalClick }: { onTerminalClick: () => void 
               </button>
             </motion.div>
 
-            {/* Social links */}
             <motion.nav
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -206,7 +198,7 @@ export default function Hero({ onTerminalClick }: { onTerminalClick: () => void 
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#9CA3AF] hover:text-[#D9FF00] text-xs tracking-widest uppercase transition-colors duration-200 font-mono"
+                  className="inline-link text-[#9CA3AF] hover:text-[#D9FF00] text-xs tracking-widest uppercase transition-colors duration-200 font-mono"
                   aria-label={`Visit ${s.label} profile`}
                 >
                   {s.label}
@@ -224,13 +216,13 @@ export default function Hero({ onTerminalClick }: { onTerminalClick: () => void 
               className="relative"
               aria-hidden="true"
             >
-              {/* Rotating rings */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-72 h-72 sm:w-80 sm:h-80 rounded-full border border-[rgba(217,255,0,0.06)] animate-[spin_25s_linear_infinite]" />
-                <div className="absolute w-56 h-56 sm:w-64 sm:h-64 rounded-full border border-[rgba(217,255,0,0.1)] animate-[spin_18s_linear_infinite_reverse]" />
-              </div>
+              {!prefersReduced && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="w-72 h-72 sm:w-80 sm:h-80 rounded-full border border-[rgba(217,255,0,0.06)] animate-[spin_25s_linear_infinite]" />
+                  <div className="absolute w-56 h-56 sm:w-64 sm:h-64 rounded-full border border-[rgba(217,255,0,0.1)] animate-[spin_18s_linear_infinite_reverse]" />
+                </div>
+              )}
 
-              {/* Avatar container */}
               <div
                 ref={avatarRef}
                 className="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-72 lg:h-72"
@@ -251,26 +243,23 @@ export default function Hero({ onTerminalClick }: { onTerminalClick: () => void 
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[rgba(217,255,0,0.02)] to-transparent" />
                 </div>
-
-                {/* Hex glow */}
                 <div
                   className="absolute inset-0 pointer-events-none opacity-60"
                   style={{
                     clipPath: "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)",
-                    background: "transparent",
                     boxShadow: "inset 0 0 0 1.5px rgba(217,255,0,0.25), 0 0 50px rgba(217,255,0,0.12)",
                   }}
                 />
               </div>
 
-              {/* Floating stat cards — hidden on small mobile */}
+              {/* Floating stat cards — hidden on mobile */}
               <motion.div
                 animate={prefersReduced ? {} : { y: [0, -8, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute -left-4 sm:-left-10 top-1/4 glass neon-border rounded-lg px-3 py-2 hidden sm:block"
               >
-                <div className="font-mono text-xs text-[#D9FF00] font-bold">5+ Years</div>
-                <div className="font-mono text-[10px] text-[#9CA3AF]">Experience</div>
+                <div className="font-mono text-xs text-[#D9FF00] font-bold">{hero.floatCard1Val || "5+ Years"}</div>
+                <div className="font-mono text-[10px] text-[#9CA3AF]">{hero.floatCard1Sub || "Experience"}</div>
               </motion.div>
 
               <motion.div
@@ -278,14 +267,13 @@ export default function Hero({ onTerminalClick }: { onTerminalClick: () => void 
                 transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                 className="absolute -right-4 sm:-right-6 bottom-1/4 glass neon-border rounded-lg px-3 py-2 hidden sm:block"
               >
-                <div className="font-mono text-xs text-[#D9FF00] font-bold">80+ Projects</div>
-                <div className="font-mono text-[10px] text-[#9CA3AF]">Shipped</div>
+                <div className="font-mono text-xs text-[#D9FF00] font-bold">{hero.floatCard2Val || "80+ Projects"}</div>
+                <div className="font-mono text-[10px] text-[#9CA3AF]">{hero.floatCard2Sub || "Shipped"}</div>
               </motion.div>
             </motion.div>
           </div>
         </div>
 
-        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

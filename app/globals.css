@@ -8,6 +8,7 @@
   --white: #ffffff;
   --lime: #D9FF00;
   --lime-dim: rgba(217, 255, 0, 0.7);
+  --lime-subtle: rgba(217, 255, 0, 0.08);
   --gray: #9CA3AF;
   --gray-dim: #6B7280;
   --dark-gray: #1a1a1a;
@@ -15,6 +16,12 @@
   --border-subtle: rgba(255, 255, 255, 0.06);
   --shadow-lime: 0 0 30px rgba(217, 255, 0, 0.12);
   --shadow-lime-strong: 0 0 60px rgba(217, 255, 0, 0.2);
+
+  /* Safe area fallbacks */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 
   /* Typography scale */
   --text-xs: 0.75rem;
@@ -30,13 +37,16 @@
   --text-7xl: 4.5rem;
 
   /* Spacing scale */
-  --space-section: clamp(5rem, 10vw, 8rem);
+  --space-section: clamp(4rem, 10vw, 8rem);
   --space-container: clamp(1.25rem, 5vw, 2rem);
 
   /* Radii */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
+
+  /* Touch target minimum */
+  --touch-target: 44px;
 }
 
 /* ─── Reset ──────────────────────────────────────────────────── */
@@ -51,6 +61,7 @@ html {
   scroll-behavior: smooth;
   background: var(--bg);
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -61,6 +72,9 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Notch / home-bar padding */
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
 }
 
 /* Desktop-only cursor: none */
@@ -86,6 +100,22 @@ body {
   border-radius: 2px;
 }
 input:focus, textarea:focus { outline: none; }
+
+/* ─── Touch target minimum ──────────────────────────────────── */
+button, a, [role="button"], [role="tab"] {
+  min-height: var(--touch-target);
+  min-width: var(--touch-target);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Allow narrow inline links to override */
+a.inline-link, .no-min-touch {
+  min-height: unset;
+  min-width: unset;
+  display: inline;
+}
 
 /* ─── Custom Cursor (desktop-only) ───────────────────────────── */
 .cursor {
@@ -141,13 +171,8 @@ input:focus, textarea:focus { outline: none; }
   box-shadow: 0 0 20px rgba(217, 255, 0, 0.06), inset 0 0 20px rgba(217, 255, 0, 0.02);
 }
 
-.neon-glow {
-  box-shadow: var(--shadow-lime);
-}
-
-.neon-glow-strong {
-  box-shadow: var(--shadow-lime-strong);
-}
+.neon-glow { box-shadow: var(--shadow-lime); }
+.neon-glow-strong { box-shadow: var(--shadow-lime-strong); }
 
 /* ─── Gradient Text ───────────────────────────────────────────── */
 .gradient-text {
@@ -179,6 +204,7 @@ input:focus, textarea:focus { outline: none; }
   width: 2rem;
   height: 1px;
   background: var(--lime);
+  flex-shrink: 0;
 }
 
 /* ─── Card Base ───────────────────────────────────────────────── */
@@ -201,6 +227,7 @@ input:focus, textarea:focus { outline: none; }
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
+  min-height: var(--touch-target);
   background: var(--lime);
   color: #000;
   font-family: var(--font-inter), sans-serif;
@@ -214,6 +241,7 @@ input:focus, textarea:focus { outline: none; }
   transition: box-shadow 0.3s ease, transform 0.2s ease;
   position: relative;
   overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-primary:hover {
@@ -229,6 +257,7 @@ input:focus, textarea:focus { outline: none; }
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
+  min-height: var(--touch-target);
   background: transparent;
   color: var(--lime);
   font-family: var(--font-mono), monospace;
@@ -239,6 +268,7 @@ input:focus, textarea:focus { outline: none; }
   border: 1px solid rgba(217, 255, 0, 0.25);
   cursor: pointer;
   transition: background 0.25s ease, border-color 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-outline:hover {
@@ -251,7 +281,6 @@ input:focus, textarea:focus { outline: none; }
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
-
 .blink { animation: blink 1s step-end infinite; }
 
 @keyframes pulse-lime {
@@ -277,7 +306,6 @@ input:focus, textarea:focus { outline: none; }
   80% { clip-path: inset(54% 0 7% 0); transform: translate(-4px, 0); }
   100% { clip-path: inset(58% 0 43% 0); transform: translate(4px, 0); }
 }
-
 .glitch-effect { animation: glitch 0.3s infinite; }
 
 @keyframes matrix-fall {
@@ -292,7 +320,6 @@ input:focus, textarea:focus { outline: none; }
   66% { text-shadow: 2px 2px #ff0000, -2px -2px #00ffff; }
   100% { text-shadow: 2px 0 #ff0000, -2px 0 #00ffff; }
 }
-
 .rgb-split { animation: rgb-split 0.15s infinite; }
 
 @keyframes flicker {
@@ -301,13 +328,16 @@ input:focus, textarea:focus { outline: none; }
   66% { opacity: 0.6; }
   80% { opacity: 0.9; }
 }
-
 .flicker { animation: flicker 0.5s linear; }
 
 @keyframes gradient-shift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
 }
 
 /* ─── Reduced Motion ──────────────────────────────────────────── */
@@ -353,4 +383,58 @@ input:focus, textarea:focus { outline: none; }
 }
 
 /* ─── Smooth image rendering ──────────────────────────────────── */
-img { max-width: 100%; height: auto; }
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ─── Safe area navbar ────────────────────────────────────────── */
+.navbar-safe {
+  padding-top: var(--safe-top);
+}
+
+/* ─── Footer safe area ───────────────────────────────────────── */
+.footer-safe {
+  padding-bottom: calc(var(--safe-bottom) + 1.5rem);
+}
+
+/* ─── Dynamic viewport height terminal ───────────────────────── */
+.terminal-height {
+  height: clamp(260px, 38dvh, 420px);
+}
+
+/* ─── Autocomplete dropdown ──────────────────────────────────── */
+.autocomplete-list {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 0;
+  background: #0e0e0e;
+  border: 1px solid rgba(217, 255, 0, 0.15);
+  border-radius: 6px;
+  overflow: hidden;
+  z-index: 50;
+  min-width: 220px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.autocomplete-item {
+  padding: 0.5rem 1rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  color: var(--gray);
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.active {
+  background: rgba(217, 255, 0, 0.06);
+  color: var(--lime);
+}
+
+.autocomplete-item .cmd-key { color: var(--lime); min-width: 100px; }
+.autocomplete-item .cmd-desc { color: var(--gray); font-size: 0.65rem; opacity: 0.7; }
