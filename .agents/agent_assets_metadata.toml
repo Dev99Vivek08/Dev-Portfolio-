@@ -1,0 +1,14 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "woOQll6zZfpBRb-AmlafW"
+uri = "file://dist/source/devos-portfolio-source.zip"
+type = "unspecified"
+title = "DEV.OS — Full Source Code"
+
+[[outputs]]
+id = "094_Y89b9dDw6yRjtxmbh"
+uri = "file://dist/preview/devos-preview.zip"
+type = "unspecified"
+title = "DEV.OS — HTML Preview (Unzip karke browser mein kholo)"
