@@ -1,36 +1,282 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+DEVOS — Developer Operating System
 
-## Getting Started
+A futuristic, cinematic, and fully interactive developer portfolio platform built with modern web technologies.
 
-First, run the development server:
+DEVOS is more than just a portfolio website.
+It is a customizable developer operating system featuring:
 
-```bash
+- interactive terminal experience
+- dynamic admin panel
+- immersive UI/UX
+- CMS-style content management
+- cinematic animations
+- real-time customization system
+
+---
+
+Preview
+
+Features
+
+- Futuristic cinematic UI
+- Interactive terminal system
+- Full admin dashboard
+- Dynamic project management
+- Responsive mobile experience
+- CMS-like content editing
+- Animated transitions
+- Matrix & glitch effects
+- SEO optimized architecture
+- Performance-focused rendering
+- Accessibility improvements
+- Modular scalable structure
+
+---
+
+Tech Stack
+
+Frontend
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Three.js
+
+Backend / Services
+
+- Supabase
+- Storage Buckets
+- Authentication
+- Database Schema
+
+UI / Animation
+
+- Glassmorphism
+- Custom Cursor
+- Particle Effects
+- Matrix Rain
+- Cinematic Gradients
+- Motion Transitions
+
+---
+
+Core Features
+
+Interactive Terminal
+
+A fully customizable terminal system where commands can:
+
+- open sections
+- redirect URLs
+- trigger animations
+- control UI states
+- launch special effects
+
+Example Commands
+
+help
+about
+projects
+skills
+resume
+contact
+clear
+matrix
+music
+admin
+
+---
+
+Admin Panel
+
+A powerful CMS-style admin dashboard for controlling the entire portfolio.
+
+Admin Features
+
+- Edit hero section
+- Manage projects
+- Update skills
+- Control terminal commands
+- Manage themes
+- SEO settings
+- Performance settings
+- Message management
+- Media management
+
+---
+
+Dynamic Theme System
+
+Customize:
+
+- accent colors
+- glow intensity
+- animations
+- gradients
+- particle effects
+- cursor effects
+
+---
+
+Responsive Design
+
+Fully optimized for:
+
+- mobile
+- tablet
+- desktop
+
+Includes:
+
+- adaptive layouts
+- touch optimization
+- reduced motion support
+- mobile performance tuning
+
+---
+
+Project Structure
+
+/app
+/components
+/admin
+/features
+/hooks
+/lib
+/services
+/store
+/supabase
+/styles
+/types
+/utils
+
+---
+
+Installation
+
+Clone Repository
+
+git clone https://github.com/your-username/devos.git
+
+Navigate
+
+cd devos
+
+Install Dependencies
+
+npm install
+
+Run Development Server
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a ".env.local" file:
 
-## Learn More
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_key
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Performance Optimizations
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Dynamic imports
+- Lazy loading
+- Reduced motion support
+- Mobile effect disabling
+- Optimized rendering
+- GPU-heavy effect reduction
+- Modular architecture
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Accessibility
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+DEVOS includes:
+
+- keyboard navigation
+- aria support
+- reduced motion support
+- semantic HTML structure
+- responsive typography
+
+---
+
+SEO Features
+
+- OpenGraph metadata
+- Sitemap generation
+- Robots configuration
+- Dynamic metadata
+- Optimized page structure
+
+---
+
+Future Improvements
+
+- AI content generator
+- Drag & drop page builder
+- Real-time collaboration
+- Command marketplace
+- Plugin system
+- Advanced analytics
+- Multi-user admin roles
+- Visual layout editor
+
+---
+
+Philosophy
+
+DEVOS is designed to feel like:
+
+«a personal developer operating system»
+
+Instead of:
+
+«a traditional portfolio website»
+
+The goal is to create:
+
+- immersion
+- interaction
+- atmosphere
+- identity
+- personalization
+
+while maintaining:
+
+- performance
+- scalability
+- responsiveness
+- production quality
+
+---
+
+Author
+
+Built by DEV
+
+---
+
+License
+
+MIT License
+
+---
+
+Final Notes
+
+This project is an experimental fusion of:
+
+- cinematic UI
+- modern frontend engineering
+- immersive interaction design
+- developer tooling aesthetics
+- scalable CMS architecture
+
+Designed for creators who want their portfolio to feel like an experience rather than a static webpage.
